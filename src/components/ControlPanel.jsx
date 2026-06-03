@@ -115,7 +115,64 @@ export default function ControlPanel({
             return;
         }
 
-        src / components / ControlPanel.jsx
+        // After
+        const sentence = buildSentence();
+        const hasOmittable = Object.values(selection).some(s => s?.item?.canOmit);
+        const omitNote = hasOmittable ? `
+[중요 예외 규칙 - 최우선 적용]
+이 문장에는 목적격 관계대명사(who/which + 주어 + 동사 구조)가 포함되어 있다.
+- 반드시 정답(isCorrect: true)으로 처리한다.
+- 관계절 콤마는 절대 사용하지 않는다. (제한적 용법만 사용)
+- rec1: 관계대명사를 생략한 버전 (가장 자연스러운 표현)
+- rec2: whom을 사용한 버전 (격식체)
+- explanation 마지막에 반드시 줄바꿈 후 회색 텍스트(<span style="color:#999">)로 추가:
+  "who/which 절에 주어가 있는 경우 생략하는 게 가장 자연스러워요. 만약 꼭 쓰고 싶다면 whom을 쓰는 게 자연스러워요."
+` : '';
+
+        const prompt = `너는 초등학교 4학년 영어 선생님이야.
+${omitNote}
+학생이 단어 카드를 조합해서 만든 문장:
+"${sentence}"
+
+학생이 단어 카드를 조합해서 만든 문장의 해석:
+- 직역하되 초등학생 학습용이므로 과도한 직역은 지양한다
+- 단어에 여러가지 뜻이 있으므로 상식적인 판단을 잘 해서 해석한다
+- 예외 처리 : Fly guy, Fly girl은 영어 원서에 나오는 파리 캐릭터임 (해석은 '플라이 가이', '플라이 걸'로 적는다)
+
+평가 기준:
+- 1차 : 조합된 전체 문장의 문법 오류가 있는지 판단
+- 2차 : 조합된 전체 문장이 문맥상 자연스러운지 판단
+        한글 해석의 앞부분부터 읽었을 때, 상황과 정황이 어색한지 여부
+       (잘못된 해석 : While she likes pizza, 그녀가 피자를 좋아하는 동안 => 그녀가 피자를 좋아하는 반면에)
+- 3차 : 부사절, 전치사구, 조동사, 관계사가 들어간 문장은 이걸 기준으로 판단
+
+정답이면:
+- "explanation": 친근하고 따뜻한 말투로 2문장 이내 피드백
+- 원어민으로서 왜 이 문장이 자연스러운지 설명한다
+- 문맥상 의미가 불분명한 경우, 적절한 문구를 제안한다.
+- 추천하는 문장: 전체 문장의 문맥과 상황을 상식에 맞게 추천한다.
+  (잘못된 추천 예: While she likes pizza, my friends like him. → 음식이 나와야 상식적)
+
+오답이면:
+- 조합된 전체 문장의 문법 오류를 바로 잡는다
+- 조합된 전체 문장의 문맥의 오류를 바로 잡는다
+- "explanation": 친근하고 따뜻한 말투지만 본론만 간결하게 피드백
+  어색하거나 틀린 단어는 2pt 더 큰 볼드체의 오렌지색 컬러(#f97316)
+  추천하는 단어는 2pt 더 큰 볼드체의 스카이블루 컬러(#0084ea)
+- 추천하는 문장: 전체 문장의 문맥과 상황을 상식에 맞게 추천한다.
+  (잘못된 추천 예: While she likes pizza, my friends like him. → 음식이 나와야 상식적)
+
+JSON만 응답:
+{
+  "isCorrect": true또는false,
+  "translation": "한국어 번역",
+  "explanation": "피드백 (HTML span 태그 포함 가능)",
+  "wrongWord": "어색하거나 틀린 단어 또는 구 (정답이면 null)",
+  "rec1": "추천 문장 1",
+  "rec1kor": "추천 번역 1",
+  "rec2": "추천 문장 2",
+  "rec2kor": "추천 번역 2"
+}`;
 
         // 같은 문장이면 캐시된 결과 바로 표시
         if (lastResultRef.current?.sentence === sentence) {
