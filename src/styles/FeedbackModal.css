@@ -1,0 +1,224 @@
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    backdrop-filter: blur(2px);
+}
+
+.modal-content {
+    background: #ffffff;
+    border-radius: 16px;
+    width: 92%;
+    max-width: 700px;
+    max-height: 88dvh;
+    overflow-y: auto;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    animation: popUp 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes popUp {
+    from {
+        transform: scale(0.9) translateY(10px);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-header {
+    padding: 14px 20px;
+    font-size: 17px;
+    font-weight: 700;
+    color: #fff;
+    text-align: center;
+}
+
+.modal-header.success {
+    background: #10b981;
+}
+
+.modal-header.warn {
+    background: #f59e0b;
+}
+
+.modal-body {
+    padding: 24px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.modal-sentence {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: 0.02em;
+    word-spacing: 0.15em;
+    line-height: 1.4;
+    background: var(--surface);
+    border-radius: 10px;
+    padding: 16px 20px;
+}
+
+.word-err {
+    color: #f97316;
+    font-weight: 700;
+}
+
+.modal-translation {
+    font-size: 16px;
+    color: var(--text-secondary);
+    font-weight: 600;
+    margin-top: 6px;
+}
+
+.modal-explanation {
+    font-size: 17px;
+    color: var(--text-primary);
+    line-height: 1.5;
+    font-weight: 500;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 10px;
+}
+
+.modal-explanation p {
+    margin: 0;
+}
+
+.modal-explanation .en-word {
+    color: var(--correct);
+    font-weight: 700;
+}
+
+/* 추천 문장 섹션 */
+.modal-recommends {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 18px;
+}
+
+.recommends-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.modal-recommend {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background: var(--correct-bg);
+    border-radius: 10px;
+    padding: 12px 16px;
+    border-left: 4px solid var(--correct);
+}
+
+.recommend-method {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--correct);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.recommend-sentence {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: 0.02em;
+    word-spacing: 0.1em;
+}
+
+.recommend-translation {
+    font-size: 14px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* 푸터 */
+.modal-footer {
+    padding: 12px 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    border-top: 1px solid var(--divider);
+}
+
+.btn-close {
+    padding: 10px 24px;
+    border-radius: 24px;
+    border: none;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.btn-next {
+    background: var(--text-primary);
+    color: #fff;
+}
+
+.btn-retry {
+    background: var(--text-primary);
+    color: #fff;
+}
+
+.btn-skip {
+    background: transparent;
+    border: 1px solid var(--btn-border);
+    color: var(--text-secondary);
+}
+
+.btn-refresh {
+    background: var(--correct-bg);
+    border: 1px solid var(--correct);
+    color: var(--correct);
+}
+
+/* 조합된 문장의 주어/동사 등 품사 표시 */
+.sentence-slots {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 4px 10px;
+    margin-bottom: 4px;
+}
+
+.sentence-slot-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.slot-underline {
+    width: 100%;
+    height: 1px;
+    background: var(--divider);
+    border-radius: 1px;
+    opacity: 0.7;
+}
+
+.slot-label {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+}
+
+.sentence-period {
+    font-size: 20px;
+    font-weight: 700;
+    align-self: flex-start;
+    padding-top: 2px;
+}

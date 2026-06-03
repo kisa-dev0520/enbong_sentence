@@ -1,0 +1,42 @@
+.word-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 4px 6px;
+    border-radius: 14px;
+    cursor: pointer;
+    min-height: 18px;
+    transition: background 0.12s;
+}
+
+.word-card:hover {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.word-card.selected {
+    background: rgba(255, 255, 255, 1.0);
+}
+
+.kor-txt {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.eng-txt {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+    white-space: nowrap;
+    margin-left: auto;
+}
+
+.verb-change {
+    color: var(--wrong);
+}
+
+.conj-change {
+    color: var(--correct);
+}

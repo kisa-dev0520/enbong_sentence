@@ -1,0 +1,21 @@
+{
+    "left": [
+        { "kor": "~할 수 있어", "eng": "can" },
+        { "kor": "~할 거야", "eng": "will" },
+        { "kor": "~해도 돼", "eng": "may" },
+        { "kor": "~해야 해", "eng": "have to" },
+        { "kor": "~해야 했어", "eng": "had to" },
+        { "kor": "안 해도 돼", "eng": "don't have to" },
+        { "kor": "안 해도 됐어", "eng": "didn't have to" },
+        { "kor": "~하는 게 낫다", "eng": "had better" }
+    ],
+    "right": [
+        { "kor": "~할 수 있었어", "eng": "could" },
+        { "kor": "~하곤 했어", "eng": "would" },
+        { "kor": "~해야만 해", "eng": "must" },
+        { "kor": "~해야 해 (3인칭)", "eng": "has to" },
+        { "kor": "~하는 게 좋아", "eng": "should" },
+        { "kor": "안 해도 돼 (3인칭)", "eng": "doesn't have to" },
+        { "kor": "~하곤 했어", "eng": "used to" }
+    ]
+}

@@ -1,0 +1,110 @@
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 24px;
+    background: var(--card);
+    flex-shrink: 0;
+    gap: 12px;
+}
+
+.topbar-tabs {
+    display: flex;
+    gap: 6px;
+}
+
+.tab-btn {
+    padding: 9px 16px;
+    border-radius: 20px;
+    border: 1px solid var(--btn-border);
+    background: var(--btn-bg);
+    color: var(--text-secondary);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.tab-btn.active {
+    background: var(--text-primary);
+    border-color: var(--text-primary);
+    color: #fff;
+}
+
+.topbar-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.seg-ctrl {
+    display: flex;
+    background: rgba(50, 55, 67, 0.1);
+    padding: 3px;
+    border-radius: 20px;
+}
+
+.seg-btn {
+    padding: 6px 12px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 16px;
+    transition: all 0.15s;
+}
+
+.seg-btn.active {
+    background: var(--text-secondary);
+    color: var(--bg);
+}
+
+.seg-btn.active.present {
+    background: var(--text-secondary);
+    color: var(--bg);
+}
+
+.seg-btn.active.past {
+    background: var(--text-secondary);
+    color: var(--bg);
+}
+
+.topbar .sentence-preview {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 40px;
+}
+
+.topbar .sentence-text {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: 0.02em;
+    word-spacing: 0.15em;
+}
+
+.topbar .placeholder {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.set-select {
+    padding: 7px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--btn-border);
+    background: var(--btn-bg);
+    color: var(--text-secondary);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    appearance: none;
+    flex-shrink: 0;
+}

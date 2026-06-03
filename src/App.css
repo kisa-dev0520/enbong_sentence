@@ -1,0 +1,59 @@
+:root {
+  --bg: #f4f2eb;
+  --card: #f4f2eb;
+  --surface: #f4f2eb;
+  --btn-bg: #ffffff;
+  --btn-border: #bebebe;
+  --text-primary: #2d2f33;
+  --text-secondary: #7c7f82;
+  --divider: #DEE1E6;
+  --correct: #0084ea;
+  --correct-bg: #F1F8FD;
+  --wrong: #DE3B40;
+  --wrong-bg: #F9DBDC;
+
+  /* 슬롯 컬러 */
+  --c-yellow: #ffdb4b;
+  --c-pink: #ffadc0;
+  --c-blue: #93dafd;
+  --c-green: #b0f3c4;
+  --c-cream: #fff47d;
+  --c-grey: #cecece;
+
+  /* 슬롯 컬러2 : 하단 조합된 문장의 각 단어들 색상 */
+  --c-yellow2: #e89f00;
+  --c-pink2: #eb67a1;
+  --c-blue2: #28b0f4;
+  --c-green2: #7eca13;
+  --c-cream2: #dece17;
+  --c-grey2: #363636;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  height: 100dvh;
+  overflow: hidden;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  height: 100%;
+}
+
+.app {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
