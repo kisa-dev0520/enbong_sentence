@@ -20,7 +20,6 @@ function getErrIndices(words, wrongWords) {
         for (let i = 0; i <= words.length - phraseWords.length; i++) {
             const match = phraseWords.every((pw, j) => {
                 const bare = words[i + j].replace(/[^A-Za-z']/g, '').toLowerCase();
-                // exact match 또는 prefix match (동사 변형: love→loves, love→loved)
                 return bare === pw || bare.startsWith(pw);
             });
             if (match) {
@@ -32,19 +31,15 @@ function getErrIndices(words, wrongWords) {
     return errIndices;
 }
 
-// 조합된 문장 아래 주어/동사/목적어... 등의 품사 표시
 const SLOT_LABEL = {
     subject: { text: 'S', color: 'var(--c-yellow2)' },
     verb: { text: 'V', color: 'var(--c-pink2)' },
     object: { text: 'O', color: 'var(--c-blue2)' },
-    //adverb: { text: 'Adv', color: 'var(--text-secondary)' },
-    //modal: { text: 'Mod', color: 'var(--c-green2)' },
 };
 
 export default function FeedbackModal({ modal, onClose, onRefresh }) {
     const {
         isCorrect, sentence, wrongWords, translation, explanation,
-        isStreaming,
         recommendedSentence, rec1Translation,
         recommendedSentence2, rec2Translation,
         wordSlots,
@@ -59,8 +54,8 @@ export default function FeedbackModal({ modal, onClose, onRefresh }) {
             <div className="modal-content" onClick={e => e.stopPropagation()}>
 
                 {/* 헤더 */}
-                <div className={`modal-header ${isStreaming ? 'streaming' : isCorrect ? 'success' : 'warn'}`}>
-                    {isStreaming ? '✨ 문장 분석 중...' : isCorrect ? '🌟  좋은 문장이야!' : '✏️ 한 군데만 바꿔봐!'}
+                <div className={`modal-header ${isCorrect ? 'success' : 'warn'}`}>
+                    {isCorrect ? '🌟 좋은 문장이야!' : '✏️ 한 군데만 바꿔봐!'}
                 </div>
 
                 {/* 바디 */}
@@ -107,24 +102,20 @@ export default function FeedbackModal({ modal, onClose, onRefresh }) {
                             ))
                         )}
                         {translation && (
-                            <div key={translation} className="modal-translation">{translation}</div>
+                            <div className="modal-translation">{translation}</div>
                         )}
                     </div>
 
                     {/* 설명 박스 */}
                     <div className="modal-explanation">
-                        {isStreaming && !explanation ? (
-                            <div className="streaming-dots"><span /><span /><span /></div>
-                        ) : (
-                            explanationLines.map((line, i) => (
-                                <p key={i} dangerouslySetInnerHTML={{ __html: highlightEn(line, wrongWords ?? [], modal.correctWords ?? []) }} />
-                            ))
-                        )}
+                        {explanationLines.map((line, i) => (
+                            <p key={i} dangerouslySetInnerHTML={{ __html: highlightEn(line, wrongWords ?? [], modal.correctWords ?? []) }} />
+                        ))}
                     </div>
 
-                    {/* 추천 문장 (오답일 때) */}
+                    {/* 추천 문장 */}
                     {(recommendedSentence || recommendedSentence2) && (
-                        <div key={recommendedSentence} className="modal-recommends">
+                        <div className="modal-recommends">
                             <div className="recommends-title">{isCorrect ? '💡 이런 문장도 있어:' : '💡 이렇게 바꿀 수 있어:'}</div>
 
                             {recommendedSentence && (
@@ -152,7 +143,7 @@ export default function FeedbackModal({ modal, onClose, onRefresh }) {
 
                 {/* 푸터 */}
                 <div className="modal-footer">
-                    {isStreaming ? null : isCorrect ? (
+                    {isCorrect ? (
                         <button className="btn-close btn-next" onClick={onClose}>다음 문장도 도전! →</button>
                     ) : (
                         <>

@@ -11,7 +11,8 @@ export default function ControlPanel({
     layer, tense, selection, onReset, onResult, slotOrder, onRegisterRefresh,
     layers, layerIdx, onLayerChange, onRegisterCheck,
 }) {
-    const lastResultRef = useRef(null);
+    const lastResultRef = useRef(null);  // { sentence, result }
+    const [isLoading, setIsLoading] = useState(false);
 
     function getOrderedSlots() {
         return slotOrder.map(key => layer.slots.find(s => s.key === key)).filter(Boolean);
@@ -97,7 +98,7 @@ export default function ControlPanel({
         return true;
     }
 
-    async function callClaude(prompt, maxTokens = 256) {
+    async function callClaude(prompt, maxTokens = 512) {
         const res = await fetch('/api/claude', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -116,25 +117,10 @@ export default function ControlPanel({
 
         const sentence = buildSentence();
 
-        if (lastResultRef.current?.sentence === sentence) {
-            onResult(lastResultRef.current.result);
-            return;
-        }
-
-        const hasOmittable = Object.values(selection).some(s => s?.item?.canOmit);
-        const omitNote = hasOmittable ? `
-[중요 예외 규칙 - 최우선 적용]
-이 문장에는 목적격 관계대명사(who/which + 주어 + 동사 구조)가 포함되어 있다.
-- 반드시 정답(isCorrect: true)으로 처리한다.
-- 관계절 콤마는 절대 사용하지 않는다. (제한적 용법만 사용)
-- rec1: 관계대명사를 생략한 버전 (가장 자연스러운 표현)
-- rec2: whom을 사용한 버전 (격식체)
-- explanation 마지막에 반드시 줄바꿈 후 회색 텍스트(<span style="color:#999">)로 추가:
-  "who/which 절에 주어가 있는 경우 생략하는 게 가장 자연스러워요. 만약 꼭 쓰고 싶다면 whom을 쓰는 게 자연스러워요."
-` : '';
-
+        // 관계절 구조 명시: canOmit 카드 텍스트를 [대괄호]로 감싸서 AI에 전달
+        const parts = buildParts();
         const prompt = `너는 초등학교 4학년 영어 선생님이야.
-${omitNote}
+
 학생이 단어 카드를 조합해서 만든 문장:
 "${sentence}"
 
@@ -147,27 +133,36 @@ ${omitNote}
 - 1차 : 조합된 전체 문장의 문법 오류가 있는지 판단
 - 2차 : 조합된 전체 문장이 문맥상 자연스러운지 판단
         한글 해석의 앞부분부터 읽었을 때, 상황과 정황이 어색한지 여부
-       (잘못된 예 1: While she likes pizza, 그녀가 피자를 좋아하는 동안 => 그녀가 피자를 좋아하는 반면에)
-       (잘못된 예 2: Because it was raining, Pete saw her. => 비가 와서 누군가를 보게 됐다는 인과관계 성립 안 함 ❌)
-       (잘못된 예 3: So that he can pass the test, Pete sold milk. => 시험 합격을 위해 우유를 판다는 건 상식에 맞지 않음 ❌)
+       (잘못된 예 1 : While she likes pizza, 그녀가 피자를 좋아하는 동안 => 그녀가 피자를 좋아하는 반면에)
+       (잘못된 예 2 : Because it was raining, Pete saw her. => 비가 와서 누군가를 보게 됐다는 인과관계가 성립하지 않음 ❌)
+       (잘못된 예 3 : So that he can pass the test, Pete sold milk. => 시험 합격을 위해 우유를 판다는 건 상식에 맞지 않음 ❌)
 - 3차 : 부사절, 전치사구, 조동사, 관계사가 들어간 문장은 이걸 기준으로 판단
 
 정답이면:
 - "explanation": 친근하고 따뜻한 말투로 2문장 이내 피드백
 - 원어민으로서 왜 이 문장이 자연스러운지 설명한다
 - 문맥상 의미가 불분명한 경우, 적절한 문구를 제안한다.
-- 추천하는 문장: 전체 문장의 문맥과 상황을 상식에 맞게 추천한다.
-  (잘못된 추천 예: While she likes pizza, my friends like him. → 음식이 나와야 상식적)
+-  추천하는 문장 : 
+  전체 문장의 문맥과 상황을 상식에 맞게 추천한다.
+  (잘못된 추천 : While she likes pizza, my firends like him. => 음식이 나와야 상식적)
 
 오답이면:
 - 조합된 전체 문장의 문법 오류를 바로 잡는다
-- 조합된 전체 문장의 문맥의 오류를 바로 잡는다
+- 조합된 전체 문장의 문맥의 오류를 바로 잡는다 (한글 해석의 앞부분부터 읽었을 때, 상황과 정황이 어색한지 여부)
 - "explanation": 친근하고 따뜻한 말투지만 본론만 간결하게 피드백
-  어색하거나 틀린 단어는 2pt 더 큰 볼드체의 오렌지색 컬러(#f97316)
-  추천하는 단어는 2pt 더 큰 볼드체의 스카이블루 컬러(#0084ea)
-- 추천하는 문장: 전체 문장의 문맥과 상황을 상식에 맞게 추천한다.
-  (잘못된 추천 예: While she likes pizza, my friends like him. → 음식이 나와야 상식적)
+     조합된 문장이 왜 어색한지, 원어민은 이렇게 쓴다는 제안하기
+     어색하거나 틀린 단어는 2pt 더 큰 볼드체의 오렌지색 컬러 (#f97316)의 텍스트
+     추천하는 단어는 2pt 더 큰 볼드체의 스카이블루 컬러(#0084ea)의 텍스트
+- 추천하는 문장 : 
+  전체 문장의 문맥과 상황을 상식에 맞게 추천한다.
+  (잘못된 추천 : While she likes pizza, my firends like him. => 음식이 나와야 상식적)
+  원어민이 who/which를 생략해서 사용하는 경우 생략한다
 
+정답/오답 공통 : 관계사절에서 who/which를 생략한 문장일 경우, 피드백에 줄바꿈해서 연결. 괄호로 아래의 설명을 넣는다.(글자색은 회색)
+"who/which 절에 주어가 있는 경우 생략하는 게 가장 자연스러워요. 만약 꼭 쓰고 싶다면 whom을 쓰는 게 자연스러워요."
+주의: 관계절은 제한적 용법으로 피드백 한다.
+  
+    
 JSON만 응답:
 {
   "isCorrect": true또는false,
@@ -180,62 +175,22 @@ JSON만 응답:
   "rec2kor": "추천 번역 2"
 }`;
 
-        // 모달 즉시 오픈 (스트리밍 상태)
-        onResult({
-            isStreaming: true,
-            sentence,
-            wordSlots: buildParts(),
-            wrongWords: [],
-            correctWords: [],
-            explanation: '',
-            translation: '',
-        });
+        // 같은 문장이면 캐시된 결과 바로 표시
+        if (lastResultRef.current?.sentence === sentence) {
+            onResult(lastResultRef.current.result);
+            return;
+        }
 
+        setIsLoading(true);
         try {
-            const res = await fetch('/api/claude', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ prompt, maxTokens: 512, stream: true })
-            });
-
-            const reader = res.body.getReader();
-            const decoder = new TextDecoder();
-            let fullText = '';
-
-            while (true) {
-                const { done, value } = await reader.read();
-                if (done) break;
-
-                const chunk = decoder.decode(value);
-                for (const line of chunk.split('\n')) {
-                    if (!line.startsWith('data: ')) continue;
-                    const data = line.slice(6).trim();
-                    if (data === '[DONE]') continue;
-                    try {
-                        const parsed = JSON.parse(data);
-                        if (parsed.type === 'content_block_delta' && parsed.delta?.type === 'text_delta') {
-                            fullText += parsed.delta.text;
-                            const explMatch = fullText.match(/"explanation"\s*:\s*"((?:[^"\\]|\\.)*)"/);
-                            if (explMatch) {
-                                onResult(prev => ({
-                                    ...prev,
-                                    explanation: explMatch[1].replace(/\\n/g, '\n')
-                                }));
-                            }
-                        }
-                    } catch { }
-                }
-            }
-
-            const parsed = JSON.parse(fullText.match(/\{[\s\S]*\}/)[0]);
+            const parsed = await callClaude(prompt, 512);
             const wrongWords = parsed.wrongWord ? [parsed.wrongWord] : [];
 
             const result = {
-                isStreaming: false,
                 isCorrect: parsed.isCorrect,
                 sentence,
                 wrongWords,
-                wordSlots: buildParts(),
+                wordSlots: buildParts(), // S/V 레이블용
                 correctWords: [],
                 translation: parsed.translation,
                 explanation: parsed.explanation,
@@ -249,12 +204,14 @@ JSON만 응답:
             onResult(result);
         } catch (e) {
             alert('오류: ' + e.message);
-            onResult(null);
+        } finally {
+            setIsLoading(false);
         }
     }
 
     const handleRefresh = useCallback(async (rec1Eng, rec2Eng) => {
         const sentence = buildSentence();
+
         const excludeList = [rec1Eng, rec2Eng].filter(Boolean).map(s => `"${s}"`).join(', ');
 
         const prompt = `학생의 문장: "${sentence}"
@@ -273,10 +230,12 @@ JSON만 응답:
 
         try {
             const parsed = await callClaude(prompt, 256);
+
             if (!parsed.rec1) {
                 alert('더 이상 추천할 문장이 없어요!');
                 return;
             }
+
             onResult(prev => ({
                 ...prev,
                 correctWords: [],
@@ -299,26 +258,36 @@ JSON만 응답:
     }, [handleRefresh, onRegisterRefresh]);
 
     return (
-        <div className="control-panel">
-            <div className="control-left">
-                <div className="topbar-tabs">
-                    {layers.map((l, i) => (
-                        <button
-                            key={l.id}
-                            className={`tab-btn ${i === layerIdx ? 'active' : ''}`}
-                            onClick={() => onLayerChange(i)}
-                        >
-                            {l.label}
-                        </button>
-                    ))}
+        <>
+            {isLoading && (
+                <div className="loading-overlay">
+                    <div className="loading-box">
+                        <div className="loading-spinner" />
+                        <div className="loading-text">✨ 문장 분석 중...</div>
+                    </div>
+                </div>
+            )}
+            <div className="control-panel">
+                <div className="control-left">
+                    <div className="topbar-tabs">
+                        {layers.map((l, i) => (
+                            <button
+                                key={l.id}
+                                className={`tab-btn ${i === layerIdx ? 'active' : ''}`}
+                                onClick={() => onLayerChange(i)}
+                            >
+                                {l.label}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+                <div className="control-right">
+                    <button className="btn-reset" onClick={onReset}>초기화</button>
+                    <button className="btn-submit" onClick={handleCheck} disabled={isLoading}>
+                        문장 확인
+                    </button>
                 </div>
             </div>
-            <div className="control-right">
-                <button className="btn-reset" onClick={onReset}>초기화</button>
-                <button className="btn-submit" onClick={handleCheck}>
-                    문장 확인
-                </button>
-            </div>
-        </div>
+        </>
     );
 }
