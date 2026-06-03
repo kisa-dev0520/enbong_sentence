@@ -133,7 +133,9 @@ export default function ControlPanel({
 - 1차 : 조합된 전체 문장의 문법 오류가 있는지 판단
 - 2차 : 조합된 전체 문장이 문맥상 자연스러운지 판단
         한글 해석의 앞부분부터 읽었을 때, 상황과 정황이 어색한지 여부
-       (잘못된 해석 : While she likes pizza, 그녀가 피자를 좋아하는 동안 => 그녀가 피자를 좋아하는 반면에)
+       (잘못된 예 1 : While she likes pizza, 그녀가 피자를 좋아하는 동안 => 그녀가 피자를 좋아하는 반면에)
+       (잘못된 예 2 : Because it was raining, Pete saw her. => 비가 와서 누군가를 보게 됐다는 인과관계가 성립하지 않음 ❌)
+       (잘못된 예 3 : So that he can pass the test, Pete sold milk. => 시험 합격을 위해 우유를 판다는 건 상식에 맞지 않음 ❌)
 - 3차 : 부사절, 전치사구, 조동사, 관계사가 들어간 문장은 이걸 기준으로 판단
 
 정답이면:
