@@ -117,17 +117,16 @@ export default function ControlPanel({
 
         const sentence = buildSentence();
 
-        // AI 평가용: canOmit 카드의 첫 단어(who/which) 제거한 문장
-        const sentenceForAI = buildParts()
-            .map(p => p.canOmit ? p.text.split(' ').slice(1).join(' ') : p.text)
-            .filter(Boolean)
-            .join(' ');
+        // 관계절 구조 명시: canOmit 카드 텍스트를 [대괄호]로 감싸서 AI에 전달
+        const parts = buildParts();
+        const sentenceForAI = parts.map(p => p.canOmit ? `[${p.text}]` : p.text).join(' ');
         const sentenceForAIFinal = sentenceForAI.charAt(0).toUpperCase() + sentenceForAI.slice(1) + '.';
 
         const prompt = `너는 초등학교 4학년 영어 선생님이야.
 
 학생이 단어 카드를 조합해서 만든 문장:
 "${sentenceForAIFinal}"
+([대괄호] 안은 앞 명사를 수식하는 관계절임)
 
 학생이 단어 카드를 조합해서 만든 문장의 해석:
 - 직역하되 초등학생 학습용이므로 과도한 직역은 지양한다
