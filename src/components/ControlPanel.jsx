@@ -155,7 +155,7 @@ export default function ControlPanel({
   전체 문장의 문맥과 상황을 상식에 맞게 추천한다.
   (잘못된 추천 : While she likes pizza, my firends like him. => 음식이 나와야 상식적)
 
-정답/오답 공통 : 관계사절에서 who/which를 생략한 문장일 경우 아래의 설명을 꼭 넣는다.
+정답/오답 공통 : 관계사절에서 who/which를 생략한 문장일 경우 피드백 아래 줄에 괄호로 아래의 설명을 꼭 넣는다.(글자색으니 회색))
 "who/which 절에 주어가 있는 경우 생략하는 게 가장 자연스러워요. 만약 꼭 쓰고 싶다면 whom을 쓰는 게 자연스러워요.
 주의: 관계절은 제한적 용법으로 피드백 한다.
   
