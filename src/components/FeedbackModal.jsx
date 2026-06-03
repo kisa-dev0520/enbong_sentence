@@ -106,7 +106,9 @@ export default function FeedbackModal({ modal, onClose, onRefresh }) {
                                     : <span key={i}>{word} </span>
                             ))
                         )}
-                        <div className="modal-translation">{translation}</div>
+                        {translation && (
+                            <div key={translation} className="modal-translation">{translation}</div>
+                        )}
                     </div>
 
                     {/* 설명 박스 */}
@@ -122,7 +124,7 @@ export default function FeedbackModal({ modal, onClose, onRefresh }) {
 
                     {/* 추천 문장 (오답일 때) */}
                     {(recommendedSentence || recommendedSentence2) && (
-                        <div className="modal-recommends">
+                        <div key={recommendedSentence} className="modal-recommends">
                             <div className="recommends-title">{isCorrect ? '💡 이런 문장도 있어:' : '💡 이렇게 바꿀 수 있어:'}</div>
 
                             {recommendedSentence && (
