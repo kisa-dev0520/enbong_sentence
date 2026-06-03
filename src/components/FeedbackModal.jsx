@@ -44,6 +44,7 @@ const SLOT_LABEL = {
 export default function FeedbackModal({ modal, onClose, onRefresh }) {
     const {
         isCorrect, sentence, wrongWords, translation, explanation,
+        isStreaming,
         recommendedSentence, rec1Translation,
         recommendedSentence2, rec2Translation,
         wordSlots,
@@ -58,8 +59,8 @@ export default function FeedbackModal({ modal, onClose, onRefresh }) {
             <div className="modal-content" onClick={e => e.stopPropagation()}>
 
                 {/* 헤더 */}
-                <div className={`modal-header ${isCorrect ? 'success' : 'warn'}`}>
-                    {isCorrect ? '🌟 완벽한 문장이야!' : '✏️ 한 군데만 바꿔봐!'}
+                <div className={`modal-header ${isStreaming ? 'streaming' : isCorrect ? 'success' : 'warn'}`}>
+                    {isStreaming ? '✨ 문장 분석 중...' : isCorrect ? '🌟  좋은 문장이야!' : '✏️ 한 군데만 바꿔봐!'}
                 </div>
 
                 {/* 바디 */}
@@ -110,9 +111,13 @@ export default function FeedbackModal({ modal, onClose, onRefresh }) {
 
                     {/* 설명 박스 */}
                     <div className="modal-explanation">
-                        {explanationLines.map((line, i) => (
-                            <p key={i} dangerouslySetInnerHTML={{ __html: highlightEn(line, wrongWords, modal.correctWords) }} />
-                        ))}
+                        {isStreaming && !explanation ? (
+                            <div className="streaming-dots"><span /><span /><span /></div>
+                        ) : (
+                            explanationLines.map((line, i) => (
+                                <p key={i} dangerouslySetInnerHTML={{ __html: highlightEn(line, wrongWords ?? [], modal.correctWords ?? []) }} />
+                            ))
+                        )}
                     </div>
 
                     {/* 추천 문장 (오답일 때) */}
@@ -145,7 +150,7 @@ export default function FeedbackModal({ modal, onClose, onRefresh }) {
 
                 {/* 푸터 */}
                 <div className="modal-footer">
-                    {isCorrect ? (
+                    {isStreaming ? null : isCorrect ? (
                         <button className="btn-close btn-next" onClick={onClose}>다음 문장도 도전! →</button>
                     ) : (
                         <>

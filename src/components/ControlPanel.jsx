@@ -11,8 +11,7 @@ export default function ControlPanel({
     layer, tense, selection, onReset, onResult, slotOrder, onRegisterRefresh,
     layers, layerIdx, onLayerChange, onRegisterCheck,
 }) {
-    const lastResultRef = useRef(null);  // { sentence, result }
-    const [isLoading, setIsLoading] = useState(false);
+    const lastResultRef = useRef(null);
 
     function getOrderedSlots() {
         return slotOrder.map(key => layer.slots.find(s => s.key === key)).filter(Boolean);
@@ -98,7 +97,7 @@ export default function ControlPanel({
         return true;
     }
 
-    async function callClaude(prompt, maxTokens = 512) {
+    async function callClaude(prompt, maxTokens = 256) {
         const res = await fetch('/api/claude', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -115,8 +114,13 @@ export default function ControlPanel({
             return;
         }
 
-        // After
         const sentence = buildSentence();
+
+        if (lastResultRef.current?.sentence === sentence) {
+            onResult(lastResultRef.current.result);
+            return;
+        }
+
         const hasOmittable = Object.values(selection).some(s => s?.item?.canOmit);
         const omitNote = hasOmittable ? `
 [중요 예외 규칙 - 최우선 적용]
@@ -143,7 +147,9 @@ ${omitNote}
 - 1차 : 조합된 전체 문장의 문법 오류가 있는지 판단
 - 2차 : 조합된 전체 문장이 문맥상 자연스러운지 판단
         한글 해석의 앞부분부터 읽었을 때, 상황과 정황이 어색한지 여부
-       (잘못된 해석 : While she likes pizza, 그녀가 피자를 좋아하는 동안 => 그녀가 피자를 좋아하는 반면에)
+       (잘못된 예 1: While she likes pizza, 그녀가 피자를 좋아하는 동안 => 그녀가 피자를 좋아하는 반면에)
+       (잘못된 예 2: Because it was raining, Pete saw her. => 비가 와서 누군가를 보게 됐다는 인과관계 성립 안 함 ❌)
+       (잘못된 예 3: So that he can pass the test, Pete sold milk. => 시험 합격을 위해 우유를 판다는 건 상식에 맞지 않음 ❌)
 - 3차 : 부사절, 전치사구, 조동사, 관계사가 들어간 문장은 이걸 기준으로 판단
 
 정답이면:
@@ -174,22 +180,62 @@ JSON만 응답:
   "rec2kor": "추천 번역 2"
 }`;
 
-        // 같은 문장이면 캐시된 결과 바로 표시
-        if (lastResultRef.current?.sentence === sentence) {
-            onResult(lastResultRef.current.result);
-            return;
-        }
+        // 모달 즉시 오픈 (스트리밍 상태)
+        onResult({
+            isStreaming: true,
+            sentence,
+            wordSlots: buildParts(),
+            wrongWords: [],
+            correctWords: [],
+            explanation: '',
+            translation: '',
+        });
 
-        setIsLoading(true);
         try {
-            const parsed = await callClaude(prompt, 512);
+            const res = await fetch('/api/claude', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ prompt, maxTokens: 512, stream: true })
+            });
+
+            const reader = res.body.getReader();
+            const decoder = new TextDecoder();
+            let fullText = '';
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+
+                const chunk = decoder.decode(value);
+                for (const line of chunk.split('\n')) {
+                    if (!line.startsWith('data: ')) continue;
+                    const data = line.slice(6).trim();
+                    if (data === '[DONE]') continue;
+                    try {
+                        const parsed = JSON.parse(data);
+                        if (parsed.type === 'content_block_delta' && parsed.delta?.type === 'text_delta') {
+                            fullText += parsed.delta.text;
+                            const explMatch = fullText.match(/"explanation"\s*:\s*"((?:[^"\\]|\\.)*)"/);
+                            if (explMatch) {
+                                onResult(prev => ({
+                                    ...prev,
+                                    explanation: explMatch[1].replace(/\\n/g, '\n')
+                                }));
+                            }
+                        }
+                    } catch { }
+                }
+            }
+
+            const parsed = JSON.parse(fullText.match(/\{[\s\S]*\}/)[0]);
             const wrongWords = parsed.wrongWord ? [parsed.wrongWord] : [];
 
             const result = {
+                isStreaming: false,
                 isCorrect: parsed.isCorrect,
                 sentence,
                 wrongWords,
-                wordSlots: buildParts(), // S/V 레이블용
+                wordSlots: buildParts(),
                 correctWords: [],
                 translation: parsed.translation,
                 explanation: parsed.explanation,
@@ -203,14 +249,12 @@ JSON만 응답:
             onResult(result);
         } catch (e) {
             alert('오류: ' + e.message);
-        } finally {
-            setIsLoading(false);
+            onResult(null);
         }
     }
 
     const handleRefresh = useCallback(async (rec1Eng, rec2Eng) => {
         const sentence = buildSentence();
-
         const excludeList = [rec1Eng, rec2Eng].filter(Boolean).map(s => `"${s}"`).join(', ');
 
         const prompt = `학생의 문장: "${sentence}"
@@ -229,12 +273,10 @@ JSON만 응답:
 
         try {
             const parsed = await callClaude(prompt, 256);
-
             if (!parsed.rec1) {
                 alert('더 이상 추천할 문장이 없어요!');
                 return;
             }
-
             onResult(prev => ({
                 ...prev,
                 correctWords: [],
@@ -257,36 +299,26 @@ JSON만 응답:
     }, [handleRefresh, onRegisterRefresh]);
 
     return (
-        <>
-            {isLoading && (
-                <div className="loading-overlay">
-                    <div className="loading-box">
-                        <div className="loading-spinner" />
-                        <div className="loading-text">✨ 문장 분석 중...</div>
-                    </div>
-                </div>
-            )}
-            <div className="control-panel">
-                <div className="control-left">
-                    <div className="topbar-tabs">
-                        {layers.map((l, i) => (
-                            <button
-                                key={l.id}
-                                className={`tab-btn ${i === layerIdx ? 'active' : ''}`}
-                                onClick={() => onLayerChange(i)}
-                            >
-                                {l.label}
-                            </button>
-                        ))}
-                    </div>
-                </div>
-                <div className="control-right">
-                    <button className="btn-reset" onClick={onReset}>초기화</button>
-                    <button className="btn-submit" onClick={handleCheck} disabled={isLoading}>
-                        문장 확인
-                    </button>
+        <div className="control-panel">
+            <div className="control-left">
+                <div className="topbar-tabs">
+                    {layers.map((l, i) => (
+                        <button
+                            key={l.id}
+                            className={`tab-btn ${i === layerIdx ? 'active' : ''}`}
+                            onClick={() => onLayerChange(i)}
+                        >
+                            {l.label}
+                        </button>
+                    ))}
                 </div>
             </div>
-        </>
+            <div className="control-right">
+                <button className="btn-reset" onClick={onReset}>초기화</button>
+                <button className="btn-submit" onClick={handleCheck}>
+                    문장 확인
+                </button>
+            </div>
+        </div>
     );
 }
