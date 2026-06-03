@@ -116,9 +116,9 @@ export default function FeedbackModal({ modal, onClose, onRefresh }) {
                     </div>
 
                     {/* 추천 문장 (오답일 때) */}
-                    {!isCorrect && (recommendedSentence || recommendedSentence2) && (
+                    {(recommendedSentence || recommendedSentence2) && (
                         <div className="modal-recommends">
-                            <div className="recommends-title">💡 이렇게 바꿀 수 있어:</div>
+                            <div className="recommends-title">{isCorrect ? '💡 이런 문장도 있어:' : '💡 이렇게 바꿀 수 있어:'}</div>
 
                             {recommendedSentence && (
                                 <div className="modal-recommend">
