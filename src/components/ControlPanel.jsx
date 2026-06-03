@@ -2,11 +2,6 @@ import { getPlainVerb } from '../utils/verbConjugate';
 import { useEffect, useCallback, useRef, useState } from 'react';
 import '../styles/ControlPanel.css';
 
-const SLOT_COLOR_MAP = {
-    subj: 'var(--c-yellow2)', verb: 'var(--c-pink2)', obj: 'var(--c-blue2)',
-    mod: 'var(--c-green2)', rel: 'var(--c-cream2)', ext: 'var(--c-grey2)',
-};
-
 export default function ControlPanel({
     layer, tense, selection, onReset, onResult, slotOrder, onRegisterRefresh,
     layers, layerIdx, onLayerChange, onRegisterCheck,
@@ -28,7 +23,7 @@ export default function ControlPanel({
             const text = slot.isVerb
                 ? getPlainVerb(sel.item, selection['subject']?.item, tense, hasModal)
                 : (sel.item.eng ?? sel.item.base);
-            parts.push({ text, color: SLOT_COLOR_MAP[slot.color] ?? null, slotKey: slot.key, canOmit: sel.item.canOmit ?? false });
+            parts.push({ text, slotKey: slot.key, canOmit: sel.item.canOmit ?? false });
         });
         return parts;
     }
@@ -52,43 +47,6 @@ export default function ControlPanel({
         sentence = sentence.charAt(0).toUpperCase() + sentence.slice(1);
         if (!sentence.endsWith('.')) sentence += '.';
         return sentence;
-    }
-
-    function buildColoredNodes() {
-        const parts = buildParts();
-        if (parts.length === 0) return null;
-
-        const result = parts.map((p, i) => ({
-            ...p, text: i === 0 ? p.text.charAt(0).toUpperCase() + p.text.slice(1) : p.text
-        }));
-
-        const firstSlot = getOrderedSlots()[0];
-        const isAdverbFront = firstSlot?.color === 'ext' && selection[firstSlot.key];
-
-        const nodes = [];
-        result.forEach((part, i) => {
-            const needsComma = isAdverbFront && i === 0;
-            const firstWord = part.text.split(' ')[0];
-            const restWords = part.text.split(' ').slice(1).join(' ');
-            nodes.push(
-                <span key={i} style={{
-                    color: part.color ?? 'var(--text-primary)',
-                    background: part.color ? part.color + 'ff' : 'transparent',
-                    borderRadius: '6px', padding: '0 4px',
-                }}>
-                    {part.canOmit ? (
-                        <>
-                            <span style={{ opacity: 0.35 }}>{firstWord}</span>
-                            {restWords ? ' ' + restWords : ''}
-                        </>
-                    ) : part.text}
-                    {needsComma ? ',' : ''}
-                </span>
-            );
-            if (i < result.length - 1) nodes.push(' ');
-        });
-        nodes.push('.');
-        return nodes;
     }
 
     function validate() {

@@ -171,10 +171,6 @@ export default function App() {
         onLayerChange={handleLayerChange}
         onRegisterCheck={(fn) => { checkRef.current = fn; }}
         onRegisterRefresh={(fn) => { refreshRef.current = fn; }}
-        currentSet={currentSet}
-        sets={SETS}
-        onSetChange={(s) => { setCurrentSet(s); handleReset(); }}
-        onCheck={() => checkRef.current?.()}
       />
       {modal && (
         <FeedbackModal

@@ -8,25 +8,6 @@
     flex-shrink: 0;
 }
 
-.sentence-preview {
-    flex: 1;
-    min-height: 40px;
-    display: flex;
-    align-items: center;
-}
-
-.sentence-text {
-    font-size: 24px;
-    font-weight: 600;
-    color: var(--text-primary);
-    letter-spacing: -0.02em;
-}
-
-.placeholder {
-    font-size: 14px;
-    color: var(--text-secondary);
-}
-
 .action-row {
     display: flex;
     gap: 8px;
