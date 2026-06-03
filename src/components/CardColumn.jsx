@@ -10,16 +10,11 @@ const COLOR_MAP = {
     ext: 'col-grey',
 };
 
-const SINGLE_COL_KEYS = ['adverb', 'modal', 'subRel', 'objRel'];
-
 export default function CardColumn({
     slot, data, tense,
     selectedItem, selectedSubject, onSelect,
     isDragging, onDragStart, onDrop, onDragEnd, isAdverbFront, hasModal
 }) {
-    const isSingleCol = SINGLE_COL_KEYS.includes(slot.key);
-
-    // 새 구조 { left, right } 또는 구 구조 배열 모두 지원
     const isArray = Array.isArray(data);
     const leftItems = isArray ? [] : (data.left ?? []);
     const rightItems = isArray ? [] : (data.right ?? []);
@@ -40,9 +35,9 @@ export default function CardColumn({
                 <div className="main-title">{slot.label}</div>
             </div>
 
-            <div className={`word-grid ${isSingleCol ? 'single-col' : ''}`}>
+            <div className={`word-grid ${isArray ? 'single-col' : ''}`}>
                 {isArray ? (
-                    // 구 구조: 그냥 flat 렌더
+                    // flat 배열: 1열 순서대로
                     flatItems.map((item, i) => (
                         <WordCard
                             key={i}
@@ -56,23 +51,8 @@ export default function CardColumn({
                             hasModal={hasModal}
                         />
                     ))
-                ) : isSingleCol ? (
-                    // 한 열짜리: left + right 합쳐서 세로 나열
-                    [...leftItems, ...rightItems].map((item, i) => (
-                        <WordCard
-                            key={i}
-                            item={item}
-                            slot={slot}
-                            tense={tense}
-                            selectedSubject={selectedSubject}
-                            isSelected={selectedItem === item}
-                            onSelect={() => onSelect(item)}
-                            isAdverbFront={isAdverbFront}
-                            hasModal={hasModal}
-                        />
-                    ))
                 ) : (
-                    // 두 열짜리: left/right 행 순서대로 교차 배치
+                    // { left, right } 구조: 2열 교차 배치
                     Array.from({ length: maxRows }).flatMap((_, i) => {
                         const cells = [];
                         if (leftItems[i]) {

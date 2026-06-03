@@ -28,7 +28,7 @@ export default function ControlPanel({
             const text = slot.isVerb
                 ? getPlainVerb(sel.item, selection['subject']?.item, tense, hasModal)
                 : (sel.item.eng ?? sel.item.base);
-            parts.push({ text, color: SLOT_COLOR_MAP[slot.color] ?? null, slotKey: slot.key });
+            parts.push({ text, color: SLOT_COLOR_MAP[slot.color] ?? null, slotKey: slot.key, canOmit: sel.item.canOmit ?? false });
         });
         return parts;
     }
@@ -68,13 +68,21 @@ export default function ControlPanel({
         const nodes = [];
         result.forEach((part, i) => {
             const needsComma = isAdverbFront && i === 0;
+            const firstWord = part.text.split(' ')[0];
+            const restWords = part.text.split(' ').slice(1).join(' ');
             nodes.push(
                 <span key={i} style={{
                     color: part.color ?? 'var(--text-primary)',
                     background: part.color ? part.color + 'ff' : 'transparent',
                     borderRadius: '6px', padding: '0 4px',
                 }}>
-                    {part.text}{needsComma ? ',' : ''}
+                    {part.canOmit ? (
+                        <>
+                            <span style={{ opacity: 0.35 }}>{firstWord}</span>
+                            {restWords ? ' ' + restWords : ''}
+                        </>
+                    ) : part.text}
+                    {needsComma ? ',' : ''}
                 </span>
             );
             if (i < result.length - 1) nodes.push(' ');

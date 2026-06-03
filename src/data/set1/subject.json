@@ -1,29 +1,29 @@
 {
     "left": [
         { "kor": "난/나는", "eng": "I", "isT3": false },
+        { "kor": "넌/너는", "eng": "You", "isT3": false },
         { "kor": "우린/우리는", "eng": "We", "isT3": false },
+        { "kor": "그들은/그것들은", "eng": "They", "isT3": false },
         { "kor": "그는/그가", "eng": "He", "isT3": true },
-        { "kor": "그것은", "eng": "It", "isT3": true },
+        { "kor": "그녀는/그녀가", "eng": "She", "isT3": true },
+        { "kor": "그것은/그것이", "eng": "It", "isT3": true },
+        { "kor": "내 친구는", "eng": "My friend", "isT3": true },
         { "kor": "내 친구들은", "eng": "My friends", "isT3": false },
         { "kor": "우리 선생님은", "eng": "My teacher", "isT3": true },
-        { "kor": "너와 나는", "eng": "You and I", "isT3": false },
-        { "kor": "사자는", "eng": "A lion", "isT3": true },
-        { "kor": "플라이걸은", "eng": "Fly girl", "isT3": true },
-        { "kor": "버즈는", "eng": "Buzz", "isT3": true },
-        { "kor": "내 폰은", "eng": "My phone", "isT3": true },
-        { "kor": "프로기는", "eng": "Froggy", "isT3": true }
+        { "kor": "우리 선생님들은", "eng": "My teachers", "isT3": false },
+        { "kor": "플라이 가이는", "eng": "Fly guy", "isT3": true },
+        { "kor": "플라이 걸은", "eng": "Fly girl", "isT3": true }
     ],
     "right": [
-        { "kor": "넌/너는", "eng": "You", "isT3": false },
-        { "kor": "그들은", "eng": "They", "isT3": false },
-        { "kor": "그녀는/그녀가", "eng": "She", "isT3": true },
-        { "kor": "내 친구는", "eng": "My friend", "isT3": true },
-        { "kor": "우리 선생님들은", "eng": "My teachers", "isT3": false },
-        { "kor": "플라이가이는", "eng": "Fly guy", "isT3": true },
-        { "kor": "그 버스는", "eng": "The bus", "isT3": true },
-        { "kor": "내 강아지는", "eng": "My dog", "isT3": true },
-        { "kor": "피트는", "eng": "Pete", "isT3": true },
-        { "kor": "헨리는", "eng": "Henry", "isT3": true },
-        { "kor": "내 자전거는", "eng": "My bike", "isT3": true }
+        { "kor": "버즈는", "eng": "Buzz", "isT3": true },
+        { "kor": "내 강아지가", "eng": "My dog", "isT3": true },
+        { "kor": "내 폰이", "eng": "My phone", "isT3": true },
+        { "kor": "피트가", "eng": "Pete", "isT3": true },
+        { "kor": "프로기는", "eng": "Froggy", "isT3": true },
+        { "kor": "헨리가", "eng": "Henry", "isT3": true },
+        { "kor": "내 자전거가", "eng": "My bike", "isT3": true },
+        { "kor": "너와 나는", "eng": "You and I", "isT3": false },
+        { "kor": "사자는", "eng": "A lion", "isT3": true },
+        { "kor": "그 버스가", "eng": "The bus", "isT3": true }
     ]
 }

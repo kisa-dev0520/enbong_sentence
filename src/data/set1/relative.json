@@ -1,22 +1,22 @@
-{
-    "left": [
-        { "kor": "너를 사랑하는", "eng": "who loves you", "tense": "present" },
-        { "kor": "내가 싫어하는", "eng": "who I hate", "tense": "present" },
-        { "kor": "그녀가 본", "eng": "who she saw", "tense": "past" },
-        { "kor": "그들이 싫어하는", "eng": "who they hate", "tense": "present" },
-        { "kor": "집을 지은", "eng": "who built the house", "tense": "past" },
-        { "kor": "나를 도운", "eng": "who helped me", "tense": "past" },
-        { "kor": "다리가 10개인", "eng": "which has 10 legs", "tense": "present" },
-        { "kor": "나를 도운", "eng": "which helped me", "tense": "past" }
-    ],
-    "right": [
-        { "kor": "피터를 만났던", "eng": "who met Peter", "tense": "past" },
-        { "kor": "네가 사랑하는", "eng": "who you love", "tense": "present" },
-        { "kor": "그가 만난", "eng": "who he met", "tense": "past" },
-        { "kor": "꿈을 가진", "eng": "who has a dream", "tense": "present" },
-        { "kor": "그 피자를 요리한", "eng": "who cooked the pizza", "tense": "past" },
-        { "kor": "나한테 돈을 준", "eng": "who gave me money", "tense": "past" },
-        { "kor": "항상 자는", "eng": "which always sleeps", "tense": "present" },
-        { "kor": "나를 안아준", "eng": "which gave me a hug", "tense": "past" }
-    ]
-}
+[
+    { "kor": "내가 싫어하는", "eng": "who I hate", "hasThat": true, "canOmit": true, "tense": "present" },
+    { "kor": "너가 사랑하는", "eng": "who you love", "hasThat": true, "canOmit": true, "tense": "present" },
+    { "kor": "그녀가 본", "eng": "who she saw", "hasThat": true, "canOmit": true, "tense": "past" },
+    { "kor": "그가 만난", "eng": "who he met", "hasThat": true, "canOmit": true, "tense": "past" },
+    { "kor": "그들이 싫어하는", "eng": "who they hate", "hasThat": true, "canOmit": true, "tense": "present" },
+    { "kor": "꿈을 가진", "eng": "who has a dream", "hasThat": true, "tense": "present" },
+    { "kor": "그 집을 지은", "eng": "who built the house", "hasThat": true, "tense": "past" },
+    { "kor": "그 피자를 요리한", "eng": "who cooked the pizza", "hasThat": true, "tense": "past" },
+    { "kor": "나를 도와준", "eng": "who helped me", "hasThat": true, "tense": "past" },
+    { "kor": "나한테 돈을 준", "eng": "who gave me money", "hasThat": true, "tense": "past" },
+    { "kor": "내가 싫어하는", "eng": "which I hate", "hasThat": true, "canOmit": true, "tense": "present" },
+    { "kor": "너가 사랑하는", "eng": "which you love", "hasThat": true, "canOmit": true, "tense": "present" },
+    { "kor": "그녀가 본", "eng": "which she saw", "hasThat": true, "canOmit": true, "tense": "past" },
+    { "kor": "그가 만난", "eng": "which he met", "hasThat": true, "canOmit": true, "tense": "past" },
+    { "kor": "그들이 싫어하는", "eng": "which they hate", "hasThat": true, "canOmit": true, "tense": "present" },
+    { "kor": "다리가 10개가 있는", "eng": "which has 10 legs", "hasThat": true, "tense": "present" },
+    { "kor": "그 남자들을 죽인", "eng": "which killed the men", "hasThat": true, "tense": "past" },
+    { "kor": "늘 자는", "eng": "which always sleeps", "hasThat": true, "tense": "present" },
+    { "kor": "나를 도와준", "eng": "which helped me", "hasThat": true, "tense": "past" },
+    { "kor": "나를 안아준", "eng": "which gave me a hug", "hasThat": true, "tense": "past" }
+]

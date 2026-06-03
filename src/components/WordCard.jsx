@@ -38,7 +38,7 @@ export default function WordCard({
             onClick={onSelect}
         >
             {(slot.key === 'adverb' || slot.key === 'preposition' ||
-                slot.key === 'subRel' || slot.key === 'objRel') && (
+                slot.key === 'subRel' || slot.key === 'objRel' || slot.key === 'modal') && (
                     <span className="kor-txt">{item.kor}</span>
                 )}
 
@@ -54,6 +54,14 @@ export default function WordCard({
                     <>
                         <span className="conj-change">{adverbForm.conj}</span>
                         {adverbForm.base}
+                    </>
+                ) : item.hasThat ? (
+                    <>
+                        <span className={item.canOmit ? 'conj-change conj-omit' : 'conj-change'}>
+                            {item.eng.split(' ')[0]}
+                        </span>
+                        {' '}<span className={item.canOmit ? 'that-txt that-omit' : 'that-txt'}>(=that)</span>
+                        {' '}{item.eng.split(' ').slice(1).join(' ')}
                     </>
                 ) : (
                     slot.key === 'subject' && isAdverbFront

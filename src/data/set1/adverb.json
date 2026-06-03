@@ -1,25 +1,21 @@
-{
-    "left": [
-        { "kor": "내가 자기 전에", "eng": "before I went to bed", "conj": "before", "tense": "past" },
-        { "kor": "내가 돌아올 때까지", "eng": "until I come back", "conj": "until", "tense": "present" },
-        { "kor": "비가 오고 있어서", "eng": "because it was raining", "conj": "because", "tense": "past" },
-        { "kor": "집에 걸어가면서", "eng": "as I walked home", "conj": "as", "tense": "past" },
-        { "kor": "그녀가 피자를 좋아하는 반면", "eng": "while she likes pizza", "conj": "while", "tense": "present" },
-        { "kor": "비록 피곤했지만", "eng": "though I was tired", "conj": "though", "tense": "past" },
-        { "kor": "네가 한가할 때면 언제든", "eng": "whenever you are free", "conj": "whenever", "tense": "present" },
-        { "kor": "그가 시험에 통과하기 위해서", "eng": "so that he can pass the test", "conj": "so that", "tense": "present" },
-        { "kor": "내가 요리하는 동안", "eng": "while I cook", "conj": "while", "tense": "present" },
-        { "kor": "그가 게임에서 졌기 때문에", "eng": "because he lost the game", "conj": "because", "tense": "past" }
-    ],
-    "right": [
-        { "kor": "점심 먹은 후에", "eng": "after I had lunch", "conj": "after", "tense": "past" },
-        { "kor": "내 친구를 봤을 때", "eng": "when I saw my friend", "conj": "when", "tense": "past" },
-        { "kor": "우리가 어렸을 때부터", "eng": "since we were young", "conj": "since", "tense": "past" },
-        { "kor": "숙제를 끝내면", "eng": "if you finish homework", "conj": "if", "tense": "present" },
-        { "kor": "비록 추웠지만", "eng": "although it was cold", "conj": "although", "tense": "past" },
-        { "kor": "그녀가 집을 떠나기 전에", "eng": "before she left the house", "conj": "before", "tense": "past" },
-        { "kor": "그녀가 집에 가자마자", "eng": "as soon as she got home", "conj": "as soon as", "tense": "past" },
-        { "kor": "우리가 도착할 때쯤", "eng": "by the time we arrived", "conj": "by the time", "tense": "past" },
-        { "kor": "내 도움이 필요할 때", "eng": "when you need my help", "conj": "when", "tense": "present" }
-    ]
-}
+[
+    { "kor": "(내가) 자기 전에", "eng": "before I went to bed", "conj": "before", "tense": "past" },
+    { "kor": "점심 먹은 후에", "eng": "after I had lunch", "conj": "after", "tense": "past" },
+    { "kor": "내가 돌아올 때까지", "eng": "until I come back", "conj": "until", "tense": "present" },
+    { "kor": "내 친구를 봤을 때", "eng": "when I saw my friend", "conj": "when", "tense": "past" },
+    { "kor": "비가 오고 있어서", "eng": "because it was raining", "conj": "because", "tense": "past" },
+    { "kor": "우리가 어렸을 때부터", "eng": "since we were young", "conj": "since", "tense": "past" },
+    { "kor": "집에 걸어가면서", "eng": "as I walked home", "conj": "as", "tense": "past" },
+    { "kor": "숙제를 끝내면", "eng": "if you finish homework", "conj": "if", "tense": "present" },
+    { "kor": "그녀가 피자를 좋아하는 반면", "eng": "while she likes pizza", "conj": "while", "tense": "present" },
+    { "kor": "비록 추웠지만", "eng": "although it was cold", "conj": "although", "tense": "past" },
+    { "kor": "난 피곤함에도 불구하고 (비록 피곤했지만)", "eng": "though I was tired", "conj": "though", "tense": "past" },
+    { "kor": "그녀가 집을 떠나기 전에", "eng": "before she left the house", "conj": "before", "tense": "past" },
+    { "kor": "네가 한가할 때면 언제든", "eng": "whenever you are free", "conj": "whenever", "tense": "present" },
+    { "kor": "그녀가 집에 가자마자", "eng": "as soon as she got home", "conj": "as soon as", "tense": "past" },
+    { "kor": "그는 시험에 통과하기 위해서", "eng": "so that he can pass the test", "conj": "so that", "tense": "present" },
+    { "kor": "우리가 도착할 때쯤", "eng": "by the time we arrived", "conj": "by the time", "tense": "past" },
+    { "kor": "내가 요리하는 동안", "eng": "while I cook", "conj": "while", "tense": "present" },
+    { "kor": "내 도움이 필요할 때", "eng": "when you need my help", "conj": "when", "tense": "present" },
+    { "kor": "그가 시합에서 졌기 때문에", "eng": "because he lost the game", "conj": "because", "tense": "past" }
+]

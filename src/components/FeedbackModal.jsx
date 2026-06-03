@@ -77,9 +77,16 @@ export default function FeedbackModal({ modal, onClose, onRefresh }) {
                                     return (
                                         <div key={i} className="sentence-slot-item">
                                             <span className={isErr ? 'word-err' : ''}>
-                                                {i === 0
-                                                    ? part.text.charAt(0).toUpperCase() + part.text.slice(1)
-                                                    : part.text}
+                                                {part.canOmit ? (
+                                                    <>
+                                                        <span style={{ opacity: 0.35 }}>{part.text.split(' ')[0]}</span>
+                                                        {' '}{part.text.split(' ').slice(1).join(' ')}
+                                                    </>
+                                                ) : (
+                                                    i === 0
+                                                        ? part.text.charAt(0).toUpperCase() + part.text.slice(1)
+                                                        : part.text
+                                                )}
                                                 {i === 0 && wordSlots.length > 1 && part.slotKey === 'adverb' ? ',' : ''}
                                             </span>
                                             <div className="slot-underline" style={{ background: label?.color ?? 'var(--btn-border)' }} />
