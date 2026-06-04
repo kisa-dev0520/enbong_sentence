@@ -101,3 +101,27 @@
         transform: rotate(360deg);
     }
 }
+
+.topbar-tabs {
+    display: flex;
+    gap: 6px;
+}
+
+.tab-btn {
+    padding: 9px 16px;
+    border-radius: 20px;
+    border: 1px solid var(--btn-border);
+    background: var(--btn-bg);
+    color: var(--text-secondary);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.tab-btn.active {
+    background: var(--text-primary);
+    border-color: var(--text-primary);
+    color: #fff;
+}
