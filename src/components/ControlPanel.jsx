@@ -77,10 +77,15 @@ export default function ControlPanel({
 
         // 관계절 구조 명시: canOmit 카드 텍스트를 [대괄호]로 감싸서 AI에 전달
         const parts = buildParts();
+        const sentenceForAI = parts.reduce(
+            (s, p) => p.canOmit ? s.replace(p.text, `[${p.text}]`) : s,
+            sentence
+        );
         const prompt = `너는 초등학교 4학년 영어 선생님이야.
 
 학생이 단어 카드를 조합해서 만든 문장:
-"${sentence}"
+"${sentenceForAI}"
+※ 대괄호 [...]로 감싼 부분은 학생이 선택한 관계사절임. who/which는 목적어 역할이므로 생략 가능하며, 있어도 오답 처리하지 않음. rec1, rec2에는 대괄호를 포함하지 않는다.
 
 학생이 단어 카드를 조합해서 만든 문장의 해석:
 - 직역하되 초등학생 학습용이므로 과도한 직역은 지양한다
